@@ -1,0 +1,133 @@
+// Options for JavaCC.
+options { LOOKAHEAD=1; FORCE_LA_CHECK=true; }
+
+// Fonction principale
+PARSER_BEGIN(Tigger)
+
+import ast.*;
+import java.util.*;
+
+
+
+public class Tigger
+{
+    public static void main(String args[]) throws ParseException
+    {
+        Tigger parser = new Tigger(System.in);
+        while (true) {
+        	Expression exp = parser.mainloop();
+	        System.out.println(exp.accepter(new VisiteurEvaluation()));
+        }
+    }
+}
+PARSER_END(Tigger)
+
+// Characters to ignore.
+SKIP: { " " | "\r" | "\t" }
+
+// Token specifications.
+TOKEN:
+{
+    < NUMBER: (<DIGIT>)+ ("." (<DIGIT>)*)? >  // A decimal number.
+|   < DIGIT: ["0"-"9"] >                      // A decimal digit.
+|   < EOL: "\n" >                             // End of line.	
+|   < PRINT : "print" >				// primitive print 
+|   < LPAR : "(" >				// left parenthesis
+|   < RPAR : ")" >				// right parenthesis
+|   < WORD : ["a"-"z"] >
+|   < VAR : "var" >
+|   < LET : "let" >
+|   < IN : "in"   >
+|   < END : "end" >
+}
+
+// Main lopp: read expressions on a line until end of file.
+//     mainloop â†’ (expression <EOL>)* <EOF>
+Expression mainloop():
+{ Expression exp;}
+{
+    (
+	      	exp=expression() { return exp; }      
+	| 	exp = letIn() { return exp; }
+	|	exp = ifThenElse() { return exp; }
+	|	exp = print() { return exp; }
+      	|	<EOL>    	  
+    )*
+    <EOF>
+}
+
+// Expression (the axiome).
+//E -> T ( +T | -T)*
+//F -> <NUM> | (E)
+Expression expression():
+{ Expression exp, a, b; }
+{
+    a=term() { exp = a; }
+    (
+      "+" b=term() { exp= new Addition(exp, b); }
+      | "-" b=term() { exp= new Soustraction(exp,b);}
+      | "<" b=expression() {exp= new Inf(exp,b);}
+      | ">" b=expression() {exp= new Sup(exp,b);}
+      | "=" b=expression() {exp= new Egal(exp,b);}
+      | "<=" b=expression() {exp= new InfEgal(exp,b);}	
+      | ">=" b=expression() {exp= new SupEgal(exp,b);}
+      | "<>" b=expression() {exp= new Different(exp,b);}  
+    )* { return exp; }
+}
+
+// T -> F (*F|/F)*
+Expression term():
+{ Expression exp, a, b; }
+{
+    a=factor() { exp = a; }
+    (
+      "*" b=factor() { exp= new Multiplication(exp,b); }
+    | "/" b=factor() { exp= new Division(exp,b);}
+    )* { return exp; }
+}
+
+// factor of an expression.
+Expression factor():
+{ Token t; Expression exp; }
+{
+    t=<NUMBER> { return new Constante(Integer.parseInt(t.toString())); }
+    |"+" t=<NUMBER> { return new Plus( new Constante(Integer.parseInt(t.toString()))); }
+    |"-" t=<NUMBER> { return new Moins(new Constante(Integer.parseInt(t.toString()))); }
+    | t=<WORD> { exp = new VariableUse(new String(""+t)); return exp; }
+    |"(" exp= expression() ")" { return exp; }
+
+}
+
+// Boolean expression
+Expression ifThenElse():
+{Expression a, b, c;}
+{	
+	"if " a=mainloop() " then " b=mainloop() " else " c=mainloop() {if (a.accepter(new VisiteurEvaluation()) == 1) {return b;} else{ return c;} 	
+}
+}
+//primitive print
+Expression print():
+{Expression exp; }
+{
+	
+        <PRINT><LPAR>exp=mainloop()<RPAR> {}
+        
+        {return exp;}
+	
+} 
+
+Expression letIn():
+{Expression vd, exp; Token name; List<Variable> let; List<Expression> in; }
+{
+	{ let = new ArrayList<Variable>(); }
+	{ in = new ArrayList<Expression>(); }
+	<LET> (<VAR> name=<WORD> ":=" vd=mainloop() { let.add(new Variable(new String(""+name), vd.accepter(new VisiteurEvaluation()))); })* <IN> (exp=mainloop() {in.add(exp);})* <END> { exp = new LetIn(let, in); return exp;}
+}
+	
+// /Exp/
+//  + /Bin/ Exp Exp
+//  |      +-- add
+//  |      +-- sub
+//  |      +-- mul
+//  |      +-- div
+//  + Number double
