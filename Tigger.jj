@@ -31,17 +31,13 @@ SKIP: { " " | "\r" | "\t" }
 // Token specifications.
 TOKEN:
 {
-    < NUMBER: (<DIGIT>)+ ("." (<DIGIT>)*)? >  // A decimal number.
+    < NUMBER: (<DIGIT>)+>  			// A integer number.
 |   < DIGIT: ["0"-"9"] >                      // A decimal digit.
 |   < EOL: "\n" >                             // End of line.
 |   < PRINT : "print" >				// primitive print
 |   < LPAR : "(" >				// left parenthesis
 |   < RPAR : ")" >				// right parenthesis
-|   < WORD : (["a"-"z"]) >
-|   < VAR : "var" >
-|   < LET : "let" >
-|   < IN : "in"   >
-|   < END : "end" >
+|   < WORD : (["a"-"z"])>
 }
 
 // Main lopp: read expressions on a line until end of file.
@@ -113,15 +109,15 @@ Expression letIn():
 {
 	{ let = new ArrayList<Variable>(); }
 	{ in = new ArrayList<Expression>(); }
-	"let" ("var" name=<WORD> ":=" vd=mainloop() { let.add(new Variable(new String(""+name), vd)); })* "in" (exp=mainloop() {in.add(exp);})* "end" { exp = new LetIn(let, in); return exp;}
+	"let" ("var" name=<WORD> ":=" vd=mainloop() { let.add(new Variable(new String(""+name), vd)); })* "in" (exp=mainloop() (",")? {in.add(exp);})* "end" { exp = new LetIn(let, in); return exp;}
 }
 
 //primitive print
 Expression print():
-{Expression exp; }
+{Expression a, exp; }
 {
-        <PRINT><LPAR>exp=mainloop()<RPAR> {}
-        {return exp;}
+       	<PRINT><LPAR>a=mainloop()<RPAR> {}        
+        {exp = new Print(a); return exp;}
 }
 
 // /Exp/

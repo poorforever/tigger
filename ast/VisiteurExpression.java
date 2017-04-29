@@ -25,5 +25,6 @@ public abstract class VisiteurExpression<T>{
   public abstract T visite(Affectation a);
   
   public abstract T visite(IfThenElse ite);
+  public abstract T visite(Print p);
 
 }

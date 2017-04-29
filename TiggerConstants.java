@@ -22,14 +22,6 @@ public interface TiggerConstants {
   int RPAR = 9;
   /** RegularExpression Id. */
   int WORD = 10;
-  /** RegularExpression Id. */
-  int VAR = 11;
-  /** RegularExpression Id. */
-  int LET = 12;
-  /** RegularExpression Id. */
-  int IN = 13;
-  /** RegularExpression Id. */
-  int END = 14;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -47,10 +39,6 @@ public interface TiggerConstants {
     "\"(\"",
     "\")\"",
     "<WORD>",
-    "\"var\"",
-    "\"let\"",
-    "\"in\"",
-    "\"end\"",
     "\"+\"",
     "\"-\"",
     "\"<\"",
@@ -64,7 +52,12 @@ public interface TiggerConstants {
     "\"if \"",
     "\" then \"",
     "\" else \"",
+    "\"let\"",
+    "\"var\"",
     "\":=\"",
+    "\"in\"",
+    "\",\"",
+    "\"end\"",
   };
 
 }

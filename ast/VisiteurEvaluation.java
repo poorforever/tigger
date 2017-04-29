@@ -119,7 +119,7 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 	
 	public Integer visite(IfThenElse ite)
 	{
-		if(ite.op1().accepter(this) == 1){
+		if(ite.op1().accepter(this) != 0){
 			return ite.op2().accepter(this);
 		}
 		else{
@@ -144,11 +144,13 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 		for(Expression e : in) {
 			res = e.accepter(this);		
 		}
-		
 		scope.scopeEnd();
 		
 		return res;
 	}
 	
-
+	public Integer visite(Print p){
+		System.out.println(p.exp().accepter(this));
+		return p.exp().accepter(this);
+	}
 }

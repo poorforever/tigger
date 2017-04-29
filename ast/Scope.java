@@ -28,7 +28,12 @@ public class Scope{
 	
 	public void letIn(String pName, int pVal){
 	//	System.out.println("Adding variable: " + pName);
-		(this.aScopeList.get(0)).put(pName, pVal);
+		if(this.aScopeList.get(0).get(pName) == null){
+			(this.aScopeList.get(0)).put(pName, pVal);
+		}
+		else{
+			throw new RuntimeException("Variable "+pName+" is already defined");
+		}
 	} 
 	
 	public int getVar(String pName){
