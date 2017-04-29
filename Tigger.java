@@ -234,18 +234,6 @@ public class Tigger implements TiggerConstants {
     throw new Error("Missing return statement in function");
   }
 
-//primitive print
-  static final public Expression print() throws ParseException {
- Expression exp;
-    jj_consume_token(PRINT);
-    jj_consume_token(LPAR);
-    exp = mainloop();
-    jj_consume_token(RPAR);
-
-         {if (true) return exp;}
-    throw new Error("Missing return statement in function");
-  }
-
   static final public Expression letIn() throws ParseException {
  Expression vd, exp; Token name; List<Variable> let; List<Expression> in;
           let = new ArrayList<Variable>();
@@ -292,6 +280,18 @@ public class Tigger implements TiggerConstants {
     }
     jj_consume_token(END);
                                                                                                                                                         exp = new LetIn(let, in); {if (true) return exp;}
+    throw new Error("Missing return statement in function");
+  }
+
+//primitive print
+  static final public Expression print() throws ParseException {
+ Expression exp;
+    jj_consume_token(PRINT);
+    jj_consume_token(LPAR);
+    exp = mainloop();
+    jj_consume_token(RPAR);
+
+         {if (true) return exp;}
     throw new Error("Missing return statement in function");
   }
 
