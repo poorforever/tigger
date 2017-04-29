@@ -11,12 +11,15 @@ import java.util.*;
 
 public class Tigger
 {
+  public static VisiteurEvaluation visiteur = new VisiteurEvaluation();
+
+  
     public static void main(String args[]) throws ParseException
     {
         Tigger parser = new Tigger(System.in);
         while (true) {
         	Expression exp = parser.mainloop();
-	        System.out.println(exp.accepter(new VisiteurEvaluation()));
+	        System.out.println(exp.accepter(visiteur));
         }
     }
 }
@@ -30,11 +33,11 @@ TOKEN:
 {
     < NUMBER: (<DIGIT>)+ ("." (<DIGIT>)*)? >  // A decimal number.
 |   < DIGIT: ["0"-"9"] >                      // A decimal digit.
-|   < EOL: "\n" >                             // End of line.	
-|   < PRINT : "print" >				// primitive print 
+|   < EOL: "\n" >                             // End of line.
+|   < PRINT : "print" >				// primitive print
 |   < LPAR : "(" >				// left parenthesis
 |   < RPAR : ")" >				// right parenthesis
-|   < WORD : ["a"-"z"] >
+|   < WORD : (["a"-"z"]) >
 |   < VAR : "var" >
 |   < LET : "let" >
 |   < IN : "in"   >
@@ -47,11 +50,11 @@ Expression mainloop():
 { Expression exp;}
 {
     (
-	      	exp=expression() { return exp; }      
+	      	exp=expression() { return exp; }
 	| 	exp = letIn() { return exp; }
 	|	exp = ifThenElse() { return exp; }
 	|	exp = print() { return exp; }
-      	|	<EOL>    	  
+      	|	<EOL>
     )*
     <EOF>
 }
@@ -69,9 +72,9 @@ Expression expression():
       | "<" b=expression() {exp= new Inf(exp,b);}
       | ">" b=expression() {exp= new Sup(exp,b);}
       | "=" b=expression() {exp= new Egal(exp,b);}
-      | "<=" b=expression() {exp= new InfEgal(exp,b);}	
+      | "<=" b=expression() {exp= new InfEgal(exp,b);}
       | ">=" b=expression() {exp= new SupEgal(exp,b);}
-      | "<>" b=expression() {exp= new Different(exp,b);}  
+      | "<>" b=expression() {exp= new Different(exp,b);}
     )* { return exp; }
 }
 
@@ -100,30 +103,27 @@ Expression factor():
 
 // Boolean expression
 Expression ifThenElse():
-{Expression a, b, c;}
-{	
-	"if " a=mainloop() " then " b=mainloop() " else " c=mainloop() {if (a.accepter(new VisiteurEvaluation()) == 1) {return b;} else{ return c;} 	
-}
-}
-//primitive print
-Expression print():
-{Expression exp; }
+{Expression a, b, c, exp;}
 {
-	
-        <PRINT><LPAR>exp=mainloop()<RPAR> {}
-        
-        {return exp;}
-	
-} 
+	"if " a=mainloop() " then " b=mainloop() " else " c=mainloop() {exp = new IfThenElse(a,b,c); return exp;}
+}
 
 Expression letIn():
 {Expression vd, exp; Token name; List<Variable> let; List<Expression> in; }
 {
 	{ let = new ArrayList<Variable>(); }
 	{ in = new ArrayList<Expression>(); }
-	<LET> (<VAR> name=<WORD> ":=" vd=mainloop() { let.add(new Variable(new String(""+name), vd.accepter(new VisiteurEvaluation()))); })* <IN> (exp=mainloop() {in.add(exp);})* <END> { exp = new LetIn(let, in); return exp;}
+	"let" ("var" name=<WORD> ":=" vd=mainloop() { let.add(new Variable(new String(""+name), vd)); })* "in" (exp=mainloop() {in.add(exp);})* "end" { exp = new LetIn(let, in); return exp;}
 }
-	
+
+//primitive print
+Expression print():
+{Expression exp; }
+{
+        <PRINT><LPAR>exp=mainloop()<RPAR> {}
+        {return exp;}
+}
+
 // /Exp/
 //  + /Bin/ Exp Exp
 //  |      +-- add

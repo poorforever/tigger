@@ -5,12 +5,15 @@ import java.util.*;
 
 
 public class Tigger implements TiggerConstants {
+  public static VisiteurEvaluation visiteur = new VisiteurEvaluation();
+
+
     public static void main(String args[]) throws ParseException
     {
         Tigger parser = new Tigger(System.in);
         while (true) {
                 Expression exp = parser.mainloop();
-                System.out.println(exp.accepter(new VisiteurEvaluation()));
+                System.out.println(exp.accepter(visiteur));
         }
     }
 
@@ -220,14 +223,14 @@ public class Tigger implements TiggerConstants {
 
 // Boolean expression
   static final public Expression ifThenElse() throws ParseException {
- Expression a, b, c;
+ Expression a, b, c, exp;
     jj_consume_token(25);
     a = mainloop();
     jj_consume_token(26);
     b = mainloop();
     jj_consume_token(27);
     c = mainloop();
-                                                                        if (a.accepter(new VisiteurEvaluation()) == 1) {{if (true) return b;}} else{ {if (true) return c;}}
+                                                                        exp = new IfThenElse(a,b,c); {if (true) return exp;}
     throw new Error("Missing return statement in function");
   }
 
@@ -262,7 +265,7 @@ public class Tigger implements TiggerConstants {
       name = jj_consume_token(WORD);
       jj_consume_token(28);
       vd = mainloop();
-                                                      let.add(new Variable(new String(""+name), vd.accepter(new VisiteurEvaluation())));
+                                                      let.add(new Variable(new String(""+name), vd));
     }
     jj_consume_token(IN);
     label_5:
@@ -285,10 +288,10 @@ public class Tigger implements TiggerConstants {
         break label_5;
       }
       exp = mainloop();
-                                                                                                                                                                   in.add(exp);
+                                                                                                                                in.add(exp);
     }
     jj_consume_token(END);
-                                                                                                                                                                                           exp = new LetIn(let, in); {if (true) return exp;}
+                                                                                                                                                        exp = new LetIn(let, in); {if (true) return exp;}
     throw new Error("Missing return statement in function");
   }
 

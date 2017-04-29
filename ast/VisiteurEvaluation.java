@@ -104,7 +104,7 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 	
 	public Integer visite(Variable v)
 	{
-		return v.valeur();
+		return (v.valeur()).accepter(this);
 	}
 	
 	public Integer visite(VariableUse vu)
@@ -114,7 +114,17 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 	
 	public Integer visite(Affectation a)
 	{
-		return a.v().valeur();
+		return a.v().valeur().accepter(this);
+	}
+	
+	public Integer visite(IfThenElse ite)
+	{
+		if(ite.op1().accepter(this) == 1){
+			return ite.op2().accepter(this);
+		}
+		else{
+			return ite.op3().accepter(this);
+		}
 	}
 	
 	public Integer visite(LetIn li)
@@ -124,7 +134,7 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 		List<Variable> let = li.let();
 		for(Variable v : let){
 			try
-				{this.scope.letIn(v.name(), v.valeur());}
+				{this.scope.letIn(v.name(), v.valeur().accepter(this));}
 			catch (Exception e) {e.printStackTrace(); System.out.println("err");}
 
 		}		

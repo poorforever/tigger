@@ -22,4 +22,6 @@ public class VisiteurParDefaut<T> extends VisiteurExpression<T>{
   
   public  T visite(LetIn li) {return null;}
   public  T visite(Affectation a) {return null;}
+  
+  public  T visite(IfThenElse ite) {return null;}
 }

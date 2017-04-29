@@ -8,7 +8,7 @@ public class Scope{
 	private List<HashMap<String, Integer>> aScopeList;
 	
 	public Scope(){
-		System.out.println("Instantiating scope object");
+//		System.out.println("Instantiating scope object");
 		this.aScopeList = new ArrayList<HashMap<String, Integer>>();
 	}
 	
@@ -17,24 +17,24 @@ public class Scope{
 	}
 	
 	public void scopeBegin(){
-		System.out.println("Entering scope");
+	//	System.out.println("Entering scope");
 		this.aScopeList.add( 0, new HashMap<String, Integer>() );
 	}
 	
 	public void scopeEnd(){
-		System.out.println("Leaving scope");
+	//	System.out.println("Leaving scope");
 		this.aScopeList.remove(0);
 	}
 	
 	public void letIn(String pName, int pVal){
-		System.out.println("Adding variable: " + pName);
+	//	System.out.println("Adding variable: " + pName);
 		(this.aScopeList.get(0)).put(pName, pVal);
 	} 
 	
 	public int getVar(String pName){
-		System.out.println("Hello, World!");
+	//	System.out.println("Hello, World!");
 		for (HashMap<String, Integer> hp : aScopeList){
-			System.out.println("Processing scope: " + hp.toString());
+	//		System.out.println("Processing scope: " + hp.toString());
 			if(hp.get(pName) != null){
 				return hp.get(pName);
 			}
