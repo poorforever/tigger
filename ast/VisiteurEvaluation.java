@@ -112,10 +112,6 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 		return scope.getVar(vu.name());
 	}
 	
-	public Integer visite(Affectation a)
-	{
-		return a.v().valeur().accepter(this);
-	}
 	
 	public Integer visite(IfThenElse ite)
 	{
@@ -152,5 +148,9 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 	public Integer visite(Print p){
 		System.out.println(p.exp().accepter(this));
 		return p.exp().accepter(this);
+	}
+	
+	public Integer visite(Affectation a){
+		return a.v().valeur().accepter(this);
 	}
 }

@@ -1,8 +1,8 @@
 package ast;
 
+import java.util.*;
+
 public class VisiteurPrint extends VisiteurParDefaut<String> {
-
-
 
     public String visite(Constante c) 
     {
@@ -12,8 +12,7 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
 
 	public String visite(Division d) 
 	{
-		return d.op1().accepter(this) + "/" + d.op2().accepter(this)
-				;
+		return "("+d.op1().accepter(this) + "/" + d.op2().accepter(this) + ")";
 	}
 
 	public String visite(Addition a) {
@@ -21,7 +20,7 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
 	}
 
 	public String visite(Multiplication m) {
-		return m.op1().accepter(this) + "*" + m.op2().accepter(this);
+		return "("+m.op1().accepter(this) + "*" + m.op2().accepter(this)+")";
 	}
 
 	public String visite(Soustraction s) {
@@ -29,12 +28,71 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
 	}
 	
 	public String visite(Plus p) {
-		return "+"+p.op1().accepter(this);
+		return "+("+p.op1().accepter(this)+")";
 	}
 
 	public String visite(Moins m) {
-		return "-"+m.op1().accepter(this);
+		return "-("+m.op1().accepter(this)+")";
 	}
+	
+	public  String visite(Egal e){
+	  	return e.op1().accepter(this)+"="+e.op2().accepter(this);
+	  }
+	   
+ 	public  String visite(Different d){
+ 		return d.op1().accepter(this)+"<>"+d.op2().accepter(this);
+ 	}
+
+  	public  String visite(SupEgal se){
+ 		return se.op1().accepter(this)+">="+se.op2().accepter(this);
+ 	 }
+
+  	public  String visite(Sup s){
+ 		return s.op1().accepter(this)+">"+s.op2().accepter(this);
+ 	 }
+
+	public  String visite(InfEgal ie){
+ 		return ie.op1().accepter(this)+"<="+ie.op2().accepter(this);
+ 	}
+
+	public  String visite(Inf i){
+ 		return i.op1().accepter(this)+"<"+i.op2().accepter(this);
+ 	}
+ 	
+   	public  String visite(IfThenElse ite) {
+   		return "if "+ite.op1().accepter(this)+" then "+ite.op2().accepter(this)+" else "+ite.op3().accepter(this);
+   	}
+ 	
+ 	public  String visite(Variable v){
+ 		return v.name()+"="+v.valeur().accepter(this);
+ 	}
+ 	
+  	public String visite(VariableUse vu) {
+  		return vu.name();
+  	}
+  	
+  	public String visite(LetIn li) {
+  		List<Variable> let = li.let();
+  		List<Expression> in = li.in();
+		String temp = new String("let \n");
+  		
+  		for(Variable v : let){
+  			temp = "\t"+temp+v.accepter(this)+"\n";
+  		}
+		
+		temp = temp +"\n";
+  		for(Expression e : in){
+  			temp = "\t"+temp+e.accepter(this)+"\n";
+  		}
+  		
+  		temp = temp+"end";
+  		return temp; 
+  		
+  		}
+  	
+//  	public  T visite(Affectation a) {return null;}
+  
+  	//public  T visite(Print p) {return null;}
 
 
 }
