@@ -1,0 +1,32 @@
+- Support des entiers relatifs 
+	Ex : 0 ; 1 ; -1; 
+	
+- Support des opérations arithmétiques binaires (+, -, /, *)
+	Ex : 1+1 ; 3-2 ; 4/2 ; 2*2 ;
+	     2+3*4 ; 5-8/2 ;
+	     Les priorités concernant la multiplication et la division sont respectées.
+	
+- Support des comparaisons (=, <>, <, <=, >, >=)
+	Ex : 1=1 ; 1<>2 ; 1<2 ; 1<=1 ; 1>0 ; 1>=0
+	Le résultat est sous forme d'entier : 1 si la comparaison est vraie, 0 sinon.
+
+- Support de la fonction print
+	Ex : print(if 1 then 2 else 3)
+	La fonction print retourne le résultat de l'expression qui lui est donné en argument.
+
+- Support du IfThenElse
+	Ex : if 1 then 2 else 3 renverra 2
+	     if 0 then 2 else 3 renverra 3
+	IfThenElse supporte les instructions récursives.
+	Ex : if if 1 then 2 else 3 then 4 else 5  renverra 4
+	     if if 1 then 0 else 3 then 4 else 5  renverra 5
+
+- Support des instructions multiples 
+	Ex : 2+2, 3*3
+	     if 1 then 2 else 3, 2+2
+	On sépare les différentes expressions par des virgules.
+
+- Support des scopes et des déclarations de variables 
+	Ex : let var a:=2 var b:=3 in print(a+b), print(a*b) end 
+	LetInEnd supporte les instructions récursives.
+	Ex : let var a:=10 in print(a), let var b:=a*a in print(b) end print(a) end 

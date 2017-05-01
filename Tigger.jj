@@ -37,7 +37,7 @@ TOKEN:
 |   < PRINT : "print" >				// primitive print
 |   < LPAR : "(" >				// left parenthesis
 |   < RPAR : ")" >				// right parenthesis
-|   < WORD : (["a"-"z"])>
+|   < WORD : (["a"-"z","A"-"Z"])>
 }
 
 // Main lopp: read expressions on a line until end of file.
@@ -50,6 +50,8 @@ Expression mainloop():
 	| 	exp = letIn() { return exp; }
 	|	exp = ifThenElse() { return exp; }
 	|	exp = print() { return exp; }
+	|	","
+	|	"help"{}
       	|	<EOL>
     )*
     <EOF>
@@ -87,7 +89,7 @@ Expression term():
 
 // factor of an expression.
 Expression factor():
-{ Token t; Expression exp; }
+{ Token t; Expression exp;}
 {
     t=<NUMBER> { return new Constante(Integer.parseInt(t.toString())); }
     |"+" t=<NUMBER> { return new Plus( new Constante(Integer.parseInt(t.toString()))); }
@@ -120,6 +122,7 @@ Expression print():
        	<PRINT><LPAR>a=mainloop()<RPAR> {}        
         {exp = new Print(a); return exp;}
 }
+
 
 // /Exp/
 //  + /Bin/ Exp Exp

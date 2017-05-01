@@ -36,6 +36,15 @@ public class Scope{
 		}
 	} 
 	
+	public void replaceIn(String name, int val){
+		if(this.aScopeList.get(0).get(name) != null){
+			(this.aScopeList.get(0)).put(name, val);
+		}
+		else{
+			throw new RuntimeException("Variable "+name+" is not delcared");
+		}		
+	}
+	
 	public int getVar(String pName){
 	//	System.out.println("Hello, World!");
 		for (HashMap<String, Integer> hp : aScopeList){
@@ -46,5 +55,4 @@ public class Scope{
 		}
 		throw new RuntimeException("Unbounded variable");
 	}
-	
 }

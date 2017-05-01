@@ -2,11 +2,11 @@ package ast;
 
 public class Affectation extends Expression {
 
-	private Variable v;
+	private String name;
 	private Expression exp;
 
-	public Affectation(Variable v, Expression exp) {
-		this.v = v;
+	public Affectation(String name, Expression exp) {
+		this.name = name;
 		this.exp = exp;
 	}
 
@@ -15,11 +15,11 @@ public class Affectation extends Expression {
 	}
 
 	public Expression exp() {
-		return exp;
+		return this.exp;
 	}
 
-	public Variable v() {
-		return v;
+	public String name() {
+		return this.name;
 	}
 
 }

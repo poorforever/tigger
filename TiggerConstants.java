@@ -39,6 +39,8 @@ public interface TiggerConstants {
     "\"(\"",
     "\")\"",
     "<WORD>",
+    "\",\"",
+    "\"help\"",
     "\"+\"",
     "\"-\"",
     "\"<\"",
@@ -56,7 +58,6 @@ public interface TiggerConstants {
     "\"var\"",
     "\":=\"",
     "\"in\"",
-    "\",\"",
     "\"end\"",
   };
 

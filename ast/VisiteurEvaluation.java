@@ -4,7 +4,12 @@ import java.util.*;
 
 public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 
+
 	private Scope scope = new Scope();
+	
+	public VisiteurEvaluation(){
+		this.scope.scopeBegin();
+	}
   
    	public Integer visite(Constante c) 
     	{
@@ -151,6 +156,7 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 	}
 	
 	public Integer visite(Affectation a){
-		return a.v().valeur().accepter(this);
+		this.scope.replaceIn(a.name(), a.exp().accepter(this));
+		return a.exp().accepter(this);
 	}
 }
