@@ -20,13 +20,15 @@ Pour utiliser Tigger, procécez comme suit :
 	- compilez le programme avec la commande "make"
 	- pour supprimer les fichiers compilés, utilisez la commande "make clean"
 	- pour lancer des tests unitaires, utilisez la commande "make check"
-	- pour lancer le programme, utilisez la commande "java Tigger"	
+	- pour lancer le programme, utilisez la commande "java Tigger", puis tapez une expression suivant la liste des fonctionnalités implémentées (cf section III- Fonctionnalités de ce document)
 	
 La syntaxe à utiliser pour Tigger sera explicitée dans la partie suivante, ainsi que les différentes fonctionnalités de Tigger.
 
 III - Fonctionnalités 
 
-Les différentes fonctionnalités ont été implémentées :
+Les différentes fonctionnalités de Tigger :
+
+Pour afficher la section "Fonctionnalités" pendant l'execution du programme, utilisez la commaande "help"
 
 - Support des entiers relatifs 
 	Ex : 0 ; 1 ; -1; 
@@ -71,7 +73,7 @@ V - Problèmes rencontrés
 - Nom des variables : Pour des raisons de conflits de choix, le nom des variables déclarées dans les différents scopes sont de la forme ["a"-"z","A"-"Z"]
 
 - Affectation : Un début d'implémentation de la fonctionnalité d'affectation a été effectué, mais il a ensuite été supprimé. En effet, l'exemple
-	let var a:=10 in print(a), a:=a*a, print(a) end retournait 10000 et non 100
+	let var a:=10 in print(a), a:=a*a, print(a) end retournait 10000 et non 100 (a^4)
 
 VI - Idées d'amélioration
 

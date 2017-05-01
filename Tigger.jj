@@ -51,7 +51,7 @@ Expression mainloop():
 	|	exp = ifThenElse() { return exp; }
 	|	exp = print() { return exp; }
 	|	","
-	|	"help"{}
+	|	"help"{return new Help();}
       	|	<EOL>
     )*
     <EOF>

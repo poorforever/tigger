@@ -159,4 +159,8 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 		this.scope.replaceIn(a.name(), a.exp().accepter(this));
 		return a.exp().accepter(this);
 	}
+	
+	public Integer visite(Help h){
+		return h.help();		
+	}
 }

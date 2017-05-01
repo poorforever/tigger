@@ -1,3 +1,10 @@
+Manuel des fonctionnalités de Tigger
+
+- Au cas où vous l'auriez lancé par erreur, sachez que ce manuel s'affiche pendant l'éxécution du programme avce la commande "help".
+  Vous pouvez aussi retrouver les différentes aides affichées ci-dessous dans le fichier README.txt, dans la section "III- Fonctionnalités"
+
+Les différentes fonctionnalités de Tigger :
+
 - Support des entiers relatifs 
 	Ex : 0 ; 1 ; -1; 
 	
