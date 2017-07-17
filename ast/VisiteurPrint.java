@@ -63,21 +63,21 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
    		return "if "+ite.op1().accepter(this)+" then "+ite.op2().accepter(this)+" else "+ite.op3().accepter(this);
    	}
  	
- 	public  String visite(Variable v){
- 		return v.name()+"="+v.valeur().accepter(this);
+ 	public  String visite(VariableDec vd){
+ 		return vd.name()+"="+vd.valeur().accepter(this);
  	}
  	
-  	public String visite(VariableUse vu) {
-  		return vu.name();
+  	public String visite(VariableCall vc) {
+  		return vc.name();
   	}
   	
   	public String visite(LetIn li) {
-  		List<Variable> let = li.let();
+  		List<VariableDec> let = li.let();
   		List<Expression> in = li.in();
 		String temp = new String("let \n");
   		
-  		for(Variable v : let){
-  			temp = "\t"+temp+v.accepter(this)+"\n";
+  		for(VariableDec vd : let){
+  			temp = "\t"+temp+vd.accepter(this)+"\n";
   		}
 		
 		temp = temp +"\n";

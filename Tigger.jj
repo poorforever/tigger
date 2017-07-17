@@ -6,21 +6,51 @@ PARSER_BEGIN(Tigger)
 
 import ast.*;
 import java.util.*;
+import java.lang.AssertionError;
+import java.io.*;
+import java.lang.System;
 
 
 
 public class Tigger
 {
   public static VisiteurEvaluation visiteur = new VisiteurEvaluation();
-
+  public static VisiteurPrint printer = new VisiteurPrint();
   
     public static void main(String args[]) throws ParseException
     {
+    
+    	try{
+    		if(args[0].equals("check")){
+			InputStream is = new FileInputStream("test.txt");
+			System.setIn(is);
+			Tigger parser = new Tigger(System.in);
+			int n = 0;
+			while(n<38){
+				try{
+			        	Expression exp = parser.mainloop();
+		        		System.out.println(exp.accepter(printer) + " = " +exp.accepter(visiteur));
+		        		n=n+1;
+		        	} catch (Exception e){System.exit(0);}
+			}
+    		}
+    		System.exit(0);
+    	}
+    	catch (Exception e){
+    		System.out.println(e.getMessage());
+    	}
+    
         Tigger parser = new Tigger(System.in);
         while (true) {
-        	Expression exp = parser.mainloop();
-	        System.out.println(exp.accepter(visiteur));
+        	try {
+        		Expression exp = parser.mainloop();
+		        System.out.println(exp.accepter(visiteur));
+		     }
+		catch (Exception e) {
+			e.printStackTrace(); break;
+		}
         }
+        
     }
 }
 PARSER_END(Tigger)
@@ -51,6 +81,7 @@ Expression mainloop():
 	|	exp = ifThenElse() { return exp; }
 	|	exp = print() { return exp; }
 	|	","
+	|	"quit" {System.exit(0);}
 	|	"help"{return new Help();}
       	|	<EOL>
     )*
@@ -94,9 +125,19 @@ Expression factor():
     t=<NUMBER> { return new Constante(Integer.parseInt(t.toString())); }
     |"+" t=<NUMBER> { return new Plus( new Constante(Integer.parseInt(t.toString()))); }
     |"-" t=<NUMBER> { return new Moins(new Constante(Integer.parseInt(t.toString()))); }
-    | t=<WORD> { exp = new VariableUse(new String(""+t)); return exp; }
+    | exp = call() {return exp;}
     |"(" exp= expression() ")" { return exp; }
 
+}
+
+// call to a function or a variable
+Expression call():
+{Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();}
+{
+
+	"call" t=<WORD>"(" (exp = expression() (",")? {args.add(exp); })*")" 
+		{exp = new FunctionCall(t.toString(), args); return exp;} 
+	| t=<WORD> { exp = new VariableCall(new String(""+t)); return exp; }
 }
 
 // Boolean expression
@@ -106,14 +147,36 @@ Expression ifThenElse():
 	"if " a=mainloop() " then " b=mainloop() " else " c=mainloop() {exp = new IfThenElse(a,b,c); return exp;}
 }
 
+
+// let in end 
 Expression letIn():
-{Expression vd, exp; Token name; List<Variable> let; List<Expression> in; }
+{Expression vd, exp; Token name; Expression fd; List<VariableDec> let; List<FunctionDec> fl; List<Expression> in;}
 {
-	{ let = new ArrayList<Variable>(); }
+	{ let = new ArrayList<VariableDec>(); }
 	{ in = new ArrayList<Expression>(); }
-	"let" ("var" name=<WORD> ":=" vd=mainloop() { let.add(new Variable(new String(""+name), vd)); })* "in" (exp=mainloop() (",")? {in.add(exp);})* "end" { exp = new LetIn(let, in); return exp;}
+	{ fl = new ArrayList<FunctionDec>();}
+	
+	"let" 
+		(
+			("var" name=<WORD> ":=" vd=mainloop() { let.add(new VariableDec(new String(""+name), vd)); })* 				"in" (exp=mainloop() (",")? {in.add(exp);})* "end" { exp = new LetIn(let, in); return exp;}
+			|
+			(fd = functionDec() {fl.add( (FunctionDec) fd);})* "in" (exp=mainloop() (",")? {in.add(exp);})* 
+			"end" {exp = new LetInFunction(fl, in); return exp;}
+			
+		)
 }
 
+
+//function declaration 
+Expression functionDec():
+{Expression exp, v; Token name; List<Expression> args; }
+{
+	{ args = new ArrayList<Expression>(); }
+	
+	"function" name=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
+	"=" v=mainloop() {exp = new FunctionDec(name.toString(), v, args) ; return exp;}
+
+}
 
 //primitive print
 Expression print():
@@ -124,10 +187,3 @@ Expression print():
 }
 
 
-// /Exp/
-//  + /Bin/ Exp Exp
-//  |      +-- add
-//  |      +-- sub
-//  |      +-- mul
-//  |      +-- div
-//  + Number double

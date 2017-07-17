@@ -1,18 +1,19 @@
+
 package ast;
 import java.util.*;
 
 public class LetIn extends Expression{
 
-	private List<Variable> let;
+	private List<VariableDec> let;
 	private List<Expression> in;
 	
-	public LetIn(List<Variable> let, List<Expression> in)
+	public LetIn(List<VariableDec> let, List<Expression> in)
 	{
 		this.let = let;
 		this.in = in;
 	}
 	
-	public List<Variable> let(){
+	public List<VariableDec> let(){
 		return this.let;
 	}
 	

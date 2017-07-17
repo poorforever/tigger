@@ -17,8 +17,8 @@ public class VisiteurParDefaut<T> extends VisiteurExpression<T>{
   public  T visite(Sup s){return null;}
   public  T visite(InfEgal ie){return null;}
   public  T visite(Inf i){return null;}
-  public  T visite(Variable v){return null;}
-  public  T visite(VariableUse vu) {return null;}
+  public  T visite(VariableDec vd){return null;}
+  public  T visite(VariableCall vc) {return null;}
   
   public  T visite(LetIn li) {return null;}
   public  T visite(Affectation a) {return null;}
@@ -27,4 +27,8 @@ public class VisiteurParDefaut<T> extends VisiteurExpression<T>{
   public  T visite(Print p) {return null;}
   
   public T visite(Help h){return null;}
+  
+  public T visite(FunctionDec fd){return null;}
+  public T visite(FunctionCall fd){return null;}
+  public T visite(LetInFunction lif){return null;}
 }

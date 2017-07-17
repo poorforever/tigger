@@ -1,4 +1,7 @@
 tigger-MANZAMBI
+
+Réalisé par Anaël MANZAMBI et Cédric SADOUNE
+
 Rapport de projet : "INF-4301A : Langages et compilation" 
 
 I - Présentation

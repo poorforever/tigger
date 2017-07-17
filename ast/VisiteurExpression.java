@@ -18,16 +18,21 @@ public abstract class VisiteurExpression<T>{
   public abstract T visite(InfEgal ie); 
   public abstract T visite(Inf i); 
   
-  public abstract T visite(Variable v);  
-  public abstract T visite(VariableUse vu);
+  public abstract T visite(VariableDec vd);  
+  public abstract T visite(VariableCall vc);
   
   public abstract T visite(LetIn li);
+
   public abstract T visite(Affectation a);
   
   public abstract T visite(IfThenElse ite);
   public abstract T visite(Print p);
   
   public abstract T visite(Help p);
+  
+  public abstract T visite(FunctionDec fd);
+  public abstract T visite(FunctionCall fc);
+  public abstract T visite(LetInFunction lif);
 
 }
 

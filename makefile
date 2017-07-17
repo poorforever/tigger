@@ -11,10 +11,9 @@ clean:
 	$(RM) ast/*.class
 	$(RM) ParseException.java Tigger.java TokenMgrError.java SimpleCharStream.java TiggerTokenManager.java TiggerConstants.java Token.java
 	
-check: Check.class
-	java Check
+check: Tigger.class
+	java -ea Tigger check 	
 
-Check.class: Check.java
-	javac Check.java
+
 	
 
