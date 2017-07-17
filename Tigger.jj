@@ -47,7 +47,8 @@ public class Tigger
 		        System.out.println(exp.accepter(visiteur));
 		     }
 		catch (Exception e) {
-			e.printStackTrace(); break;
+			e.printStackTrace(); 
+			parser.ReInit(System.in); 
 		}
         }
         
@@ -67,7 +68,15 @@ TOKEN:
 |   < PRINT : "print" >				// primitive print
 |   < LPAR : "(" >				// left parenthesis
 |   < RPAR : ")" >				// right parenthesis
-|   < WORD : (["a"-"z","A"-"Z"])>
+|   < IF   : "if" >
+|   < THEN : "then" >
+|   < ELSE : "else" >
+|   < LET  : "let" >
+|   < IN   : "in"  >
+|   < END  : "end" >		
+|   < VAR  : "var" >
+|   < FUNCTION : "function" >	
+|   < WORD : (["a"-"z"]|["a"-"z","A"-"Z"])*>
 }
 
 // Main lopp: read expressions on a line until end of file.
@@ -135,7 +144,7 @@ Expression call():
 {Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();}
 {
 
-	"call" t=<WORD>"(" (exp = expression() (",")? {args.add(exp); })*")" 
+	"." t=<WORD>"(" (exp = expression() (",")? {args.add(exp); })*")" 
 		{exp = new FunctionCall(t.toString(), args); return exp;} 
 	| t=<WORD> { exp = new VariableCall(new String(""+t)); return exp; }
 }
@@ -144,7 +153,7 @@ Expression call():
 Expression ifThenElse():
 {Expression a, b, c, exp;}
 {
-	"if " a=mainloop() " then " b=mainloop() " else " c=mainloop() {exp = new IfThenElse(a,b,c); return exp;}
+	<IF> a=mainloop() <THEN> b=mainloop() <ELSE> c=mainloop() {exp = new IfThenElse(a,b,c); return exp;}
 }
 
 
@@ -156,12 +165,12 @@ Expression letIn():
 	{ in = new ArrayList<Expression>(); }
 	{ fl = new ArrayList<FunctionDec>();}
 	
-	"let" 
+	<LET> 
 		(
-			("var" name=<WORD> ":=" vd=mainloop() { let.add(new VariableDec(new String(""+name), vd)); })* 				"in" (exp=mainloop() (",")? {in.add(exp);})* "end" { exp = new LetIn(let, in); return exp;}
+			(<VAR> name=<WORD> ":=" vd=mainloop() { let.add(new VariableDec(new String(""+name), vd)); })* 				<IN> (exp=mainloop() (",")? {in.add(exp);})* <END> { exp = new LetIn(let, in); return exp;}
 			|
-			(fd = functionDec() {fl.add( (FunctionDec) fd);})* "in" (exp=mainloop() (",")? {in.add(exp);})* 
-			"end" {exp = new LetInFunction(fl, in); return exp;}
+			(fd = functionDec() {fl.add( (FunctionDec) fd);})* <IN> (exp=mainloop() (",")? {in.add(exp);})* 
+			<END> {exp = new LetInFunction(fl, in); return exp;}
 			
 		)
 }
@@ -173,7 +182,7 @@ Expression functionDec():
 {
 	{ args = new ArrayList<Expression>(); }
 	
-	"function" name=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
+	<FUNCTION> name=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
 	"=" v=mainloop() {exp = new FunctionDec(name.toString(), v, args) ; return exp;}
 
 }

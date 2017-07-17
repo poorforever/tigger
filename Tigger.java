@@ -41,7 +41,8 @@ public class Tigger implements TiggerConstants {
                         System.out.println(exp.accepter(visiteur));
                      }
                 catch (Exception e) {
-                        e.printStackTrace(); break;
+                        e.printStackTrace();
+                        parser.ReInit(System.in);
                 }
         }
 
@@ -58,15 +59,15 @@ public class Tigger implements TiggerConstants {
       case EOL:
       case PRINT:
       case LPAR:
+      case IF:
+      case LET:
       case WORD:
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-      case 15:
-      case 24:
-      case 25:
-      case 28:
+      case 19:
+      case 20:
+      case 21:
+      case 22:
+      case 23:
+      case 32:
         ;
         break;
       default:
@@ -77,17 +78,17 @@ public class Tigger implements TiggerConstants {
       case NUMBER:
       case LPAR:
       case WORD:
-      case 14:
-      case 15:
-      case 24:
+      case 22:
+      case 23:
+      case 32:
         exp = expression();
                                    {if (true) return exp;}
         break;
-      case 28:
+      case LET:
         exp = letIn();
                                 {if (true) return exp;}
         break;
-      case 25:
+      case IF:
         exp = ifThenElse();
                                      {if (true) return exp;}
         break;
@@ -95,15 +96,15 @@ public class Tigger implements TiggerConstants {
         exp = print();
                                 {if (true) return exp;}
         break;
-      case 11:
-        jj_consume_token(11);
+      case 19:
+        jj_consume_token(19);
         break;
-      case 12:
-        jj_consume_token(12);
+      case 20:
+        jj_consume_token(20);
                         System.exit(0);
         break;
-      case 13:
-        jj_consume_token(13);
+      case 21:
+        jj_consume_token(21);
                        {if (true) return new Help();}
         break;
       case EOL:
@@ -129,14 +130,14 @@ public class Tigger implements TiggerConstants {
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 14:
-      case 15:
-      case 16:
-      case 17:
-      case 18:
-      case 19:
-      case 20:
-      case 21:
+      case 22:
+      case 23:
+      case 24:
+      case 25:
+      case 26:
+      case 27:
+      case 28:
+      case 29:
         ;
         break;
       default:
@@ -144,43 +145,43 @@ public class Tigger implements TiggerConstants {
         break label_2;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 14:
-        jj_consume_token(14);
+      case 22:
+        jj_consume_token(22);
         b = term();
                      exp= new Addition(exp, b);
         break;
-      case 15:
-        jj_consume_token(15);
+      case 23:
+        jj_consume_token(23);
         b = term();
                        exp= new Soustraction(exp,b);
         break;
-      case 16:
-        jj_consume_token(16);
+      case 24:
+        jj_consume_token(24);
         b = expression();
                             exp= new Inf(exp,b);
         break;
-      case 17:
-        jj_consume_token(17);
+      case 25:
+        jj_consume_token(25);
         b = expression();
                             exp= new Sup(exp,b);
         break;
-      case 18:
-        jj_consume_token(18);
+      case 26:
+        jj_consume_token(26);
         b = expression();
                             exp= new Egal(exp,b);
         break;
-      case 19:
-        jj_consume_token(19);
+      case 27:
+        jj_consume_token(27);
         b = expression();
                              exp= new InfEgal(exp,b);
         break;
-      case 20:
-        jj_consume_token(20);
+      case 28:
+        jj_consume_token(28);
         b = expression();
                              exp= new SupEgal(exp,b);
         break;
-      case 21:
-        jj_consume_token(21);
+      case 29:
+        jj_consume_token(29);
         b = expression();
                              exp= new Different(exp,b);
         break;
@@ -202,8 +203,8 @@ public class Tigger implements TiggerConstants {
     label_3:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 22:
-      case 23:
+      case 30:
+      case 31:
         ;
         break;
       default:
@@ -211,13 +212,13 @@ public class Tigger implements TiggerConstants {
         break label_3;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 22:
-        jj_consume_token(22);
+      case 30:
+        jj_consume_token(30);
         b = factor();
                        exp= new Multiplication(exp,b);
         break;
-      case 23:
-        jj_consume_token(23);
+      case 31:
+        jj_consume_token(31);
         b = factor();
                        exp= new Division(exp,b);
         break;
@@ -239,18 +240,18 @@ public class Tigger implements TiggerConstants {
       t = jj_consume_token(NUMBER);
                  {if (true) return new Constante(Integer.parseInt(t.toString()));}
       break;
-    case 14:
-      jj_consume_token(14);
+    case 22:
+      jj_consume_token(22);
       t = jj_consume_token(NUMBER);
                       {if (true) return new Plus( new Constante(Integer.parseInt(t.toString())));}
       break;
-    case 15:
-      jj_consume_token(15);
+    case 23:
+      jj_consume_token(23);
       t = jj_consume_token(NUMBER);
                       {if (true) return new Moins(new Constante(Integer.parseInt(t.toString())));}
       break;
     case WORD:
-    case 24:
+    case 32:
       exp = call();
                     {if (true) return exp;}
       break;
@@ -272,8 +273,8 @@ public class Tigger implements TiggerConstants {
   static final public Expression call() throws ParseException {
  Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 24:
-      jj_consume_token(24);
+    case 32:
+      jj_consume_token(32);
       t = jj_consume_token(WORD);
       jj_consume_token(LPAR);
       label_4:
@@ -282,9 +283,9 @@ public class Tigger implements TiggerConstants {
         case NUMBER:
         case LPAR:
         case WORD:
-        case 14:
-        case 15:
-        case 24:
+        case 22:
+        case 23:
+        case 32:
           ;
           break;
         default:
@@ -293,14 +294,14 @@ public class Tigger implements TiggerConstants {
         }
         exp = expression();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 11:
-          jj_consume_token(11);
+        case 19:
+          jj_consume_token(19);
           break;
         default:
           jj_la1[8] = jj_gen;
           ;
         }
-                                                       args.add(exp);
+                                                    args.add(exp);
       }
       jj_consume_token(RPAR);
                  exp = new FunctionCall(t.toString(), args); {if (true) return exp;}
@@ -320,13 +321,13 @@ public class Tigger implements TiggerConstants {
 // Boolean expression
   static final public Expression ifThenElse() throws ParseException {
  Expression a, b, c, exp;
-    jj_consume_token(25);
+    jj_consume_token(IF);
     a = mainloop();
-    jj_consume_token(26);
+    jj_consume_token(THEN);
     b = mainloop();
-    jj_consume_token(27);
+    jj_consume_token(ELSE);
     c = mainloop();
-                                                                        exp = new IfThenElse(a,b,c); {if (true) return exp;}
+                                                                   exp = new IfThenElse(a,b,c); {if (true) return exp;}
     throw new Error("Missing return statement in function");
   }
 
@@ -336,27 +337,27 @@ public class Tigger implements TiggerConstants {
           let = new ArrayList<VariableDec>();
           in = new ArrayList<Expression>();
           fl = new ArrayList<FunctionDec>();
-    jj_consume_token(28);
+    jj_consume_token(LET);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 29:
-    case 31:
+    case IN:
+    case VAR:
       label_5:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 29:
+        case VAR:
           ;
           break;
         default:
           jj_la1[10] = jj_gen;
           break label_5;
         }
-        jj_consume_token(29);
+        jj_consume_token(VAR);
         name = jj_consume_token(WORD);
-        jj_consume_token(30);
+        jj_consume_token(33);
         vd = mainloop();
                                                                 let.add(new VariableDec(new String(""+name), vd));
       }
-      jj_consume_token(31);
+      jj_consume_token(IN);
       label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -365,15 +366,15 @@ public class Tigger implements TiggerConstants {
         case EOL:
         case PRINT:
         case LPAR:
+        case IF:
+        case LET:
         case WORD:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-        case 24:
-        case 25:
-        case 28:
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 23:
+        case 32:
           ;
           break;
         default:
@@ -382,8 +383,8 @@ public class Tigger implements TiggerConstants {
         }
         exp = mainloop();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 11:
-          jj_consume_token(11);
+        case 19:
+          jj_consume_token(19);
           break;
         default:
           jj_la1[12] = jj_gen;
@@ -391,14 +392,14 @@ public class Tigger implements TiggerConstants {
         }
                                                                                                                                                                              in.add(exp);
       }
-      jj_consume_token(32);
+      jj_consume_token(END);
                                                                                                                                                                                                      exp = new LetIn(let, in); {if (true) return exp;}
       break;
-    case 33:
+    case FUNCTION:
       label_7:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 33:
+        case FUNCTION:
           ;
           break;
         default:
@@ -408,7 +409,7 @@ public class Tigger implements TiggerConstants {
         fd = functionDec();
                                              fl.add( (FunctionDec) fd);
       }
-      jj_consume_token(31);
+      jj_consume_token(IN);
       label_8:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -417,15 +418,15 @@ public class Tigger implements TiggerConstants {
         case EOL:
         case PRINT:
         case LPAR:
+        case IF:
+        case LET:
         case WORD:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-        case 24:
-        case 25:
-        case 28:
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 23:
+        case 32:
           ;
           break;
         default:
@@ -434,8 +435,8 @@ public class Tigger implements TiggerConstants {
         }
         exp = mainloop();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 11:
-          jj_consume_token(11);
+        case 19:
+          jj_consume_token(19);
           break;
         default:
           jj_la1[15] = jj_gen;
@@ -443,7 +444,7 @@ public class Tigger implements TiggerConstants {
         }
                                                                                                         in.add(exp);
       }
-      jj_consume_token(32);
+      jj_consume_token(END);
                                exp = new LetInFunction(fl, in); {if (true) return exp;}
       break;
     default:
@@ -458,7 +459,7 @@ public class Tigger implements TiggerConstants {
   static final public Expression functionDec() throws ParseException {
  Expression exp, v; Token name; List<Expression> args;
           args = new ArrayList<Expression>();
-    jj_consume_token(33);
+    jj_consume_token(FUNCTION);
     name = jj_consume_token(WORD);
     jj_consume_token(LPAR);
     label_9:
@@ -467,9 +468,9 @@ public class Tigger implements TiggerConstants {
       case NUMBER:
       case LPAR:
       case WORD:
-      case 14:
-      case 15:
-      case 24:
+      case 22:
+      case 23:
+      case 32:
         ;
         break;
       default:
@@ -478,8 +479,8 @@ public class Tigger implements TiggerConstants {
       }
       exp = expression();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 11:
-        jj_consume_token(11);
+      case 19:
+        jj_consume_token(19);
         break;
       default:
         jj_la1[18] = jj_gen;
@@ -488,7 +489,7 @@ public class Tigger implements TiggerConstants {
                                                                   args.add(exp);
     }
     jj_consume_token(RPAR);
-    jj_consume_token(18);
+    jj_consume_token(26);
     v = mainloop();
                           exp = new FunctionDec(name.toString(), v, args) ; {if (true) return exp;}
     throw new Error("Missing return statement in function");
@@ -524,10 +525,10 @@ public class Tigger implements TiggerConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1300fdd0,0x1300fdd0,0x3fc000,0x3fc000,0xc00000,0xc00000,0x100c510,0x100c510,0x800,0x1000400,0x20000000,0x1300fdd1,0x800,0x0,0x1300fdd1,0x800,0xa0000000,0x100c510,0x800,};
+      jj_la1_0 = new int[] {0xfc25d0,0xfc25d0,0x3fc00000,0x3fc00000,0xc0000000,0xc0000000,0xc40110,0xc40110,0x80000,0x40000,0x10000,0xfc25d1,0x80000,0x20000,0xfc25d1,0x80000,0x34000,0xc40110,0x80000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x2,0x0,0x0,};
+      jj_la1_1 = new int[] {0x1,0x1,0x0,0x0,0x0,0x0,0x1,0x1,0x0,0x1,0x0,0x1,0x0,0x0,0x1,0x0,0x0,0x1,0x0,};
    }
 
   /** Constructor with InputStream. */
