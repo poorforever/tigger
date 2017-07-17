@@ -273,6 +273,18 @@ public class Tigger implements TiggerConstants {
   static final public Expression call() throws ParseException {
  Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case WORD:
+      t = jj_consume_token(WORD);
+                        if(t.toString().equals("quit") ) {
+                                System.exit(0);
+                        }
+                        else if (t.toString().equals("help") ) {
+                                {if (true) return new Help();}
+                        }
+                        else{
+                        exp = new VariableCall(new String(""+t)); {if (true) return exp;}
+                        }
+      break;
     case 32:
       jj_consume_token(32);
       t = jj_consume_token(WORD);
@@ -301,14 +313,10 @@ public class Tigger implements TiggerConstants {
           jj_la1[8] = jj_gen;
           ;
         }
-                                                    args.add(exp);
+                                                          args.add(exp);
       }
       jj_consume_token(RPAR);
                  exp = new FunctionCall(t.toString(), args); {if (true) return exp;}
-      break;
-    case WORD:
-      t = jj_consume_token(WORD);
-                     exp = new VariableCall(new String(""+t)); {if (true) return exp;}
       break;
     default:
       jj_la1[9] = jj_gen;

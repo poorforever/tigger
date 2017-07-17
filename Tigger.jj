@@ -143,10 +143,19 @@ Expression factor():
 Expression call():
 {Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();}
 {
-
-	"." t=<WORD>"(" (exp = expression() (",")? {args.add(exp); })*")" 
+	t=<WORD> { 
+			if(t.toString().equals("quit") ) {
+				System.exit(0);
+			} 
+			else if (t.toString().equals("help") ) {
+				return new Help();
+			}
+			else{
+			exp = new VariableCall(new String(""+t)); return exp; 
+			}
+		}
+	|  "."t=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
 		{exp = new FunctionCall(t.toString(), args); return exp;} 
-	| t=<WORD> { exp = new VariableCall(new String(""+t)); return exp; }
 }
 
 // Boolean expression
