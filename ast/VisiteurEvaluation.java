@@ -134,7 +134,10 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 		for(VariableDec v : let){
 			try
 				{this.scope.letIn(v.name(), v.valeur());}
-			catch (Exception e) {e.printStackTrace(); System.out.println("err");}
+			catch (Exception e) {
+				//e.printStackTrace(); 
+				System.out.println("err");
+				}
 
 		}
 		List<Expression> in = li.in();
@@ -148,7 +151,7 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 
 	public Integer visite(FunctionDec fd)
 	{
-		scope.funcIn(fd.name(), fd);
+		scope.funcIn(fd.name(), fd); // Declare and add function in the function scope
 		return (fd.valeur()).accepter(this);
 	}
 
@@ -156,21 +159,23 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 	{
 		int val = Integer.MAX_VALUE;
 		try{
-			FunctionDec fd = (FunctionDec) scope.getFunc(fc.name());
-			ArrayList<Expression> args = (ArrayList<Expression>) fd.args();
-			ArrayList<Expression> param = (ArrayList<Expression>) fc.args();
-			int a = args.size();
+			FunctionDec fd = (FunctionDec) scope.getFunc(fc.name()); // get the function declaration
+			ArrayList<Expression> args = (ArrayList<Expression>) fd.args(); // get function declaration variables
+			ArrayList<Expression> param = (ArrayList<Expression>) fc.args(); // get function call variables
+			int a = args.size(); // number of arguments
 			int i;
-			scope.scopeBegin();
+			scope.scopeBegin(); // create a new scope for the function evaluation
 			for(i=0;i<a;i++){
-//				System.out.println("xxx"+((VariableCall) args.get(i)).name());
-				scope.letIn( ((VariableCall) args.get(i)).name(), param.get(i));
+				scope.letIn( ((VariableCall) args.get(i)).name(), param.get(i)); // insert into a scope each variable in the function declaration by actual variables given in the function call
 			}
-			val = fd.valeur().accepter(this);
-			scope.scopeEnd();
+			val = fd.valeur().accepter(this); // evaluate the function
+			scope.scopeEnd(); // close scope
 			return val;
 		}
-		catch (Exception e) {e.printStackTrace(); System.out.println("Error call visite(FunctionCall fc)");}
+		catch (Exception e) {
+			//e.printStackTrace(); 
+			System.out.println("Error call visite(FunctionCall fc)");
+			}
 		return val;
 	}
 
@@ -182,7 +187,10 @@ public class VisiteurEvaluation extends VisiteurParDefaut<Integer> {
 		for(FunctionDec fd : let){
 			try
 				{this.scope.funcIn(fd.name(), fd);}
-			catch (Exception e) {e.printStackTrace(); System.out.println("err");}
+			catch (Exception e) {
+			//e.printStackTrace(); 
+			System.out.println("err");
+			}
 
 		}
 		List<Expression> in = lif.in();

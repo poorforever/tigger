@@ -20,7 +20,7 @@ public class Tigger implements TiggerConstants {
                         System.setIn(is);
                         Tigger parser = new Tigger(System.in);
                         int n = 0;
-                        while(n<38){
+                        while(n<100){
                                 try{
                                         Expression exp = parser.mainloop();
                                         System.out.println(exp.accepter(printer) + " = " +exp.accepter(visiteur));
@@ -41,7 +41,8 @@ public class Tigger implements TiggerConstants {
                         System.out.println(exp.accepter(visiteur));
                      }
                 catch (Exception e) {
-                        e.printStackTrace();
+                        //e.printStackTrace(); 
+                        System.out.println(e.getMessage());
                         parser.ReInit(System.in);
                 }
         }

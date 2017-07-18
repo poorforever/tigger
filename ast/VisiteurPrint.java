@@ -80,7 +80,7 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
   			temp = "\t"+temp+vd.accepter(this)+"\n";
   		}
 		
-		temp = temp +"\n";
+		temp = temp + "\n in \n";
   		for(Expression e : in){
   			temp = "\t"+temp+e.accepter(this)+"\n";
   		}
@@ -92,7 +92,12 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
   	
 //  	public  T visite(Affectation a) {return null;}
   
-  	//public  T visite(Print p) {return null;}
+  
+  	public  String visite(Print p) {
+		String temp = new String ("print(");
+		temp = temp + p.exp().accepter(this) + ")";  	
+  		return temp;
+  		} 
 
 
 }

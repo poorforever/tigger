@@ -36,6 +36,13 @@
 -3<=-2
 -3>=-2
 -2>=-3
+print(2)
+if 1 then 2 else 3
+if 0 then 2 else 3
+let var a:=2 var b:=3 in print(a), print(b) end 
+
+
+
 
 
 

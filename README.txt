@@ -10,6 +10,7 @@ III - Fonctionnalités
 IV - Fonctionnement 
 V - Problèmes rencontrés
 VI - Idées d'amélioration
+VII - Rattrapages
 
 I - Présentation
 
@@ -65,25 +66,48 @@ Pour afficher la section "Fonctionnalités" pendant l'execution du programme, ut
 	Ex : let var a:=2 var b:=3 in print(a+b), print(a*b) end 
 	LetInEnd supporte les instructions récursives.
 	Ex : let var a:=10 in print(a), let var b:=a*a in print(b) end print(a) end 
-	
-	
+
+- Support des fonctions 
+	Ex : let function foo()=42 function bar(a)=a function baz(x,y,z)=if x the y else z in .foo()-.bar(42)=.baz(42,0,1) end 
+
+		
 IV - Fonctionnement 
 
 Le principe de fonctionnement de Tigger repose sur les patterns Composite et Visiteur.
 
 V - Problèmes rencontrés
 
-- Nom des variables : Pour des raisons de conflits de choix, le nom des variables déclarées dans les différents scopes sont de la forme ["a"-"z","A"-"Z"]
-
-- Affectation : Un début d'implémentation de la fonctionnalité d'affectation a été effectué, mais il a ensuite été supprimé. En effet, l'exemple
-	let var a:=10 in print(a), a:=a*a, print(a) end retournait 10000 et non 100 (a^4)
+- Fonctions : 
+	- Dû à un conflit de choix, l'appel (et non la déclaration d'une fonction) doit être précédé d'un caractère point "." telle que :
+		let function foo(x)=x in .foo(2) end renverra 2.
+	- Lors d'une déclaration multiple de fonction, le nom des arguments ne peut pour l'instant pas être le même dans différentes fonctions.
+		Ex : let function foo(x,y)=.bar(y,x) function bar(x,y)=x-y in .foo(2,3) end 
+		ne fonctionnera pas.
+		Ex : let function foo(x,y)=.bar(y,x) function bar(a,b)=a-b in .foo(2,3) end
+		fonctionnera.
 
 VI - Idées d'amélioration
 
 - Pour améliorer Tigger on pourrait en premier finir d'implémenter toutes les fonctionnalités requises telles que l'affectation, le while, le for et les strings.
 
-- De plus, on pourrait introduire la commande "ask" qui nous renverra le résultat d'une opération booléenne (telle qu'une comparaison) sous la forme d'une chaine de caractère.
 
+VII - Rattrapages
+
+Des modifications ont été apportés au projets. Diverses amélioratons seront effectuées. :
+
+- Le nom des variables peut désormais être une chaîne de caractères, telles que foo et bar, à l'exception de chaîne speciales telles que "let", "in", "end", "if" .. et autres chaînes utilisées par le parser pour reconnaître et différencier des expressions.
+
+- Une gestion des erreurs a été partiellement implementée. Le programme ne s'arrête plus en cas d'erreur de saisie, mais il peut encore cesser en cas de StackOverFlowException. 
+
+- Des test supplémentaires ont été ajoutés, et l'AST n'est pas construit en Java cette fois-ci. En effet, les tests sont dans un fichier texte qui est parsé. 
+
+- Dû à un conflit de choix, l'appel (et non la déclaration d'une fonction) doit être précédé d'un caractère point "." telle que :
+	let function foo(x)=x in .foo(2) end renverra 2 
+- Lors d'une déclaration multiple de fonction, le nom des arguments ne peut pour l'instant pas être le même dans différentes fonctions.
+	Ex : let function foo(x,y)=.bar(y,x) function bar(x,y)=x-y in .foo(2,3) end 
+	ne fonctionnera pas.
+	Ex : let function foo(x,y)=.bar(y,x) function bar(a,b)=a-b in .foo(2,3) end
+	fonctionnera.
 
 
 
