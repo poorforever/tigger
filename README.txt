@@ -99,15 +99,7 @@ Des modifications ont été apportés au projets. Diverses amélioratons seront 
 
 - Une gestion des erreurs a été partiellement implementée. Le programme ne s'arrête plus en cas d'erreur de saisie, mais il peut encore cesser en cas de StackOverFlowException. 
 
-- Des test supplémentaires ont été ajoutés, et l'AST n'est pas construit en Java cette fois-ci. En effet, les tests sont dans un fichier texte qui est parsé. 
-
-- Dû à un conflit de choix, l'appel (et non la déclaration d'une fonction) doit être précédé d'un caractère point "." telle que :
-	let function foo(x)=x in .foo(2) end renverra 2 
-- Lors d'une déclaration multiple de fonction, le nom des arguments ne peut pour l'instant pas être le même dans différentes fonctions.
-	Ex : let function foo(x,y)=.bar(y,x) function bar(x,y)=x-y in .foo(2,3) end 
-	ne fonctionnera pas.
-	Ex : let function foo(x,y)=.bar(y,x) function bar(a,b)=a-b in .foo(2,3) end
-	fonctionnera.
+- Des test supplémentaires ont été ajoutés, et l'AST n'est pas construit en Java cette fois-ci. En effet, les tests sont dans un fichier texte qui est parsé. Les cas d'erreur ne peuvent pas encore être parsés dans un fichier texte auquel cas celui ci s'arrête. 
 
 
 

@@ -69,6 +69,7 @@ TOKEN:
 |   < PRINT : "print" >				// primitive print
 |   < LPAR : "(" >				// left parenthesis
 |   < RPAR : ")" >				// right parenthesis
+|   < COMMA : "," >
 |   < IF   : "if" >
 |   < THEN : "then" >
 |   < ELSE : "else" >
@@ -77,25 +78,32 @@ TOKEN:
 |   < END  : "end" >		
 |   < VAR  : "var" >
 |   < FUNCTION : "function" >	
-|   < WORD : (["a"-"z"]|["a"-"z","A"-"Z"])*>
+|   < WORD : (["a"-"z"])+(["a"-"z","A"-"Z"])*>
 }
 
 // Main lopp: read expressions on a line until end of file.
 //     mainloop â†’ (expression <EOL>)* <EOF>
 Expression mainloop():
-{ Expression exp;}
-{
-    (
+{ Expression exp = null; List<Expression> list = new ArrayList<Expression>(); }
+{	 
+
+	(
+		      	exp=expression() 
+		|	exp = print() { return exp; }	
+	)? 	<EOL> {return exp;}
+
+/*	
 	      	exp=expression() { return exp; }
 	| 	exp = letIn() { return exp; }
 	|	exp = ifThenElse() { return exp; }
 	|	exp = print() { return exp; }
-	|	","
 	|	"quit" {System.exit(0);}
-	|	"help"{return new Help();}
-      	|	<EOL>
-    )*
-    <EOF>
+	|	"help"{return new Help();} 	
+	|	<EOL> {return exp;}
+    	//| <EOL> {exp = mainloop(); return exp;}
+*/
+
+
 }
 
 // Expression (the axiome).
@@ -115,6 +123,8 @@ Expression expression():
       | ">=" b=expression() {exp= new SupEgal(exp,b);}
       | "<>" b=expression() {exp= new Different(exp,b);}
     )* { return exp; }
+    | a = letIn() {return a;}
+    | a = ifThenElse() {return a;}
 }
 
 // T -> F (*F|/F)*
@@ -136,7 +146,7 @@ Expression factor():
     |"+" t=<NUMBER> { return new Plus( new Constante(Integer.parseInt(t.toString()))); }
     |"-" t=<NUMBER> { return new Moins(new Constante(Integer.parseInt(t.toString()))); }
     | exp = call() {return exp;}
-    |"(" exp= expression() ")" { return exp; }
+    //|"(" exp= expression() ")" { return exp; }
 
 }
 
@@ -144,6 +154,11 @@ Expression factor():
 Expression call():
 {Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();}
 {
+	
+	"."t=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
+		{exp = new FunctionCall(t.toString(), args); return exp;} 
+	|
+	
 	t=<WORD> { 
 			if(t.toString().equals("quit") ) {
 				System.exit(0);
@@ -155,15 +170,13 @@ Expression call():
 			exp = new VariableCall(new String(""+t)); return exp; 
 			}
 		}
-	|  "."t=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
-		{exp = new FunctionCall(t.toString(), args); return exp;} 
 }
 
 // Boolean expression
 Expression ifThenElse():
 {Expression a, b, c, exp;}
 {
-	<IF> a=mainloop() <THEN> b=mainloop() <ELSE> c=mainloop() {exp = new IfThenElse(a,b,c); return exp;}
+	<IF> a=expression() <THEN> b=expression() <ELSE> c=expression() {exp = new IfThenElse(a,b,c); return exp;}
 }
 
 
@@ -177,9 +190,9 @@ Expression letIn():
 	
 	<LET> 
 		(
-			(<VAR> name=<WORD> ":=" vd=mainloop() { let.add(new VariableDec(new String(""+name), vd)); })* 				<IN> (exp=mainloop() (",")? {in.add(exp);})* <END> { exp = new LetIn(let, in); return exp;}
+			(<VAR> name=<WORD> ":=" vd=expression() { let.add(new VariableDec(new String(""+name), vd)); })* 				<IN> (exp=expression() (",")? {in.add(exp);})* <END> { exp = new LetIn(let, in); return exp;}
 			|
-			(fd = functionDec() {fl.add( (FunctionDec) fd);})* <IN> (exp=mainloop() (",")? {in.add(exp);})* 
+			(fd = functionDec() {fl.add( (FunctionDec) fd);})* <IN> (exp=expression() (",")? {in.add(exp);})* 
 			<END> {exp = new LetInFunction(fl, in); return exp;}
 			
 		)
@@ -193,7 +206,7 @@ Expression functionDec():
 	{ args = new ArrayList<Expression>(); }
 	
 	<FUNCTION> name=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
-	"=" v=mainloop() {exp = new FunctionDec(name.toString(), v, args) ; return exp;}
+	"=" v=expression() {exp = new FunctionDec(name.toString(), v, args) ; return exp;}
 
 }
 
@@ -201,7 +214,7 @@ Expression functionDec():
 Expression print():
 {Expression a, exp; }
 {
-       	<PRINT><LPAR>a=mainloop()<RPAR> {}        
+       	<PRINT><LPAR>a=expression()<RPAR> {}        
         {exp = new Print(a); return exp;}
 }
 
