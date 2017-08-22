@@ -39,4 +39,4 @@ Les différentes fonctionnalités de Tigger :
 	Ex : let var a:=10 in print(a), let var b:=a*a in print(b) end print(a) end 
 	
 - Support des fonctions 
-	Ex : let function foo()=42 function bar(a)=a function baz(x,y,z)=if x the y else z in .foo()-.bar(42)=.baz(42,0,1) end 
+	Ex : let function foo()=42 function bar(a)=a function baz(x,y,z)=if x the y else z in foo()-bar(42)=baz(42,0,1) end 

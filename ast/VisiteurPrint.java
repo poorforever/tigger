@@ -74,25 +74,21 @@ public class VisiteurPrint extends VisiteurParDefaut<String> {
   	public String visite(LetIn li) {
   		List<VariableDec> let = li.let();
   		List<Expression> in = li.in();
-		String temp = new String("let \n");
+		String temp = new String("\n let \n");
   		
   		for(VariableDec vd : let){
-  			temp = "\t"+temp+vd.accepter(this)+"\n";
+  			temp = "\n \t"+temp+vd.accepter(this);
   		}
-		
 		temp = temp + "\n in \n";
   		for(Expression e : in){
-  			temp = "\t"+temp+e.accepter(this)+"\n";
+  			temp = "\n\t"+temp+e.accepter(this);
   		}
   		
-  		temp = temp+"end";
+  		temp = temp+"\n end";
   		return temp; 
   		
   		}
-  	
-//  	public  T visite(Affectation a) {return null;}
-  
-  
+  	 
   	public  String visite(Print p) {
 		String temp = new String ("print(");
 		temp = temp + p.exp().accepter(this) + ")";  	

@@ -176,22 +176,6 @@ Expression call():
 			}
 		} 	
 	)
-	
-	/* "."t=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
-		{exp = new FunctionCall(t.toString(), args); return exp;} 
-	|
-	
-	t=<WORD> { 
-			if(t.toString().equals("quit") ) {
-				System.exit(0);
-			} 
-			else if (t.toString().equals("help") ) {
-				return new Help();
-			}
-			else{
-			exp = new VariableCall(new String(""+t)); return exp; 
-			}
-		} */
 }
 
 // Boolean expression
@@ -236,8 +220,7 @@ Expression functionDec():
 Expression print():
 {Expression a, exp; }
 {
-       	<PRINT><LPAR>a=expression()<RPAR> {}        
-        {exp = new Print(a); return exp;}
+       	<PRINT><LPAR>a=expression()<RPAR> {exp = a; System.out.println(exp.accepter(new VisiteurPrint())); return exp;}
 }
 
 

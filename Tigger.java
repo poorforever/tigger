@@ -488,8 +488,7 @@ public class Tigger implements TiggerConstants {
     jj_consume_token(LPAR);
     a = expression();
     jj_consume_token(RPAR);
-
-         exp = new Print(a); {if (true) return exp;}
+                                           exp = a; System.out.println(exp.accepter(new VisiteurPrint())); {if (true) return exp;}
     throw new Error("Missing return statement in function");
   }
 
