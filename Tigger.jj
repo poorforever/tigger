@@ -112,21 +112,29 @@ Expression mainloop():
 Expression expression():
 { Expression exp, a, b; }
 {
-    a=term() { exp = a; }
+
+    a = arithmetic() {exp=a;}
     (
-      "+" b=term() { exp= new Addition(exp, b); }
-      | "-" b=term() { exp= new Soustraction(exp,b);}
-      | "<" b=expression() {exp= new Inf(exp,b);}
-      | ">" b=expression() {exp= new Sup(exp,b);}
-      | "=" b=expression() {exp= new Egal(exp,b);}
-      | "<=" b=expression() {exp= new InfEgal(exp,b);}
-      | ">=" b=expression() {exp= new SupEgal(exp,b);}
-      | "<>" b=expression() {exp= new Different(exp,b);}
-    )* { return exp; }
+      "<" b=arithmetic() {exp= new Inf(exp,b);}
+      | ">" b=arithmetic() {exp= new Sup(exp,b);}
+      | "=" b=arithmetic() {exp= new Egal(exp,b);}
+      | "<=" b=arithmetic() {exp= new InfEgal(exp,b);}
+      | ">=" b=arithmetic() {exp= new SupEgal(exp,b);}
+      | "<>" b=arithmetic() {exp= new Different(exp,b);}
+    )?{ return exp; }
     | a = letIn() {return a;}
     | a = ifThenElse() {return a;}
 }
 
+Expression arithmetic():
+{Expression a,b, exp;}
+{
+    a=term() { exp = a; }
+    (
+      "+" b=term() { exp= new Addition(exp, b); }
+      | "-" b=term() { exp= new Soustraction(exp,b);}
+    )* {return exp;}
+}
 // T -> F (*F|/F)*
 Expression term():
 { Expression exp, a, b; }
@@ -140,7 +148,7 @@ Expression term():
 
 // factor of an expression.
 Expression factor():
-{ Token t; Expression exp;}
+{ Token t; Expression exp, a,b;}
 {
     t=<NUMBER> { return new Constante(Integer.parseInt(t.toString())); }
     |"+" t=<NUMBER> { return new Plus( new Constante(Integer.parseInt(t.toString()))); }
@@ -150,12 +158,26 @@ Expression factor():
 
 }
 
-// call to a function or a variable
 Expression call():
 {Token t; Expression exp; List<Expression> args= new ArrayList<Expression>();}
 {
+	t=<WORD> 
+	(
+		<LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> {exp = new FunctionCall(t.toString(), args); return exp;} 
+		| { 
+			if(t.toString().equals("quit") ) {
+				System.exit(0);
+			} 
+			else if (t.toString().equals("help") ) {
+				return new Help();
+			}
+			else{
+			exp = new VariableCall(new String(""+t)); return exp; 
+			}
+		} 	
+	)
 	
-	"."t=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
+	/* "."t=<WORD> <LPAR> (exp = expression() (",")? {args.add(exp); })* <RPAR> 
 		{exp = new FunctionCall(t.toString(), args); return exp;} 
 	|
 	
@@ -169,7 +191,7 @@ Expression call():
 			else{
 			exp = new VariableCall(new String(""+t)); return exp; 
 			}
-		}
+		} */
 }
 
 // Boolean expression
